@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "tsetmc-scraper"
+version = "1.0.0"
+description = "simple package to communicate and crawl data from tsetmc.com (Tehran Stock Exchange Website)"
+license = "MIT"
+repository = "https://github.com/mmfarahmand/tsetmc-scraper"
+authors = ["MMFarahmand <mohammadmehdifarahmand@gmail.com>"]
+packages = [
+    { include = "tsetmc_scraper" },
+]
+readme = "README.md"
+keywords = ["tsetmc", "stocks", "tehran stock exchange"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.29.0"
+beautifulsoup4 = "^4.12.2"
+lxml = "^4.9.2"
+python-dateutil = "^2.8.2"
+jdatetime = "^4.1.1"
+schedule = "^1.2.0"
+pydantic = "^1.10.7"
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

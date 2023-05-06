@@ -163,6 +163,34 @@ class Symbol:
             ),
         )
 
+    def get_orderbook(self) -> SymbolOrderBookData:
+        """
+        gets the symbol orderbook
+        """
+
+        raw_data = _core.get_symbol_orderbook(symbol_id=self.symbol_id)
+
+        sell_rows = [
+            SymbolOrderBookDataRow(
+                count=row["count"],
+                price=row["price"],
+                volume=row["volume"],
+            )
+            for row in raw_data["sell_rows"]
+        ]
+        buy_rows = [
+            SymbolOrderBookDataRow(
+                count=row["count"],
+                price=row["price"],
+                volume=row["volume"],
+            )
+            for row in raw_data["buy_rows"]
+        ]
+        return SymbolOrderBookData(
+            sell_rows=sell_rows,
+            buy_rows=buy_rows,
+        )
+
     def get_intraday_price_chart_data(self) -> list[SymbolIntraDayPriceChartDataRow]:
         """
         gets last days intraday price chart (in "dar yek negah" tab)

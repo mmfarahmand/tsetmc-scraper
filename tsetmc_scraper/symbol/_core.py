@@ -1,5 +1,6 @@
 import ast
 import locale
+from collections import defaultdict
 
 import requests
 from bs4 import BeautifulSoup
@@ -231,6 +232,45 @@ def get_symbol_traders_type(symbol_id: str) -> dict:
             },
         },
     }
+
+
+def get_symbol_orderbook(symbol_id: str) -> list[dict]:
+    response = requests.get(
+        url=f"http://cdn.tsetmc.com/api/BestLimits/{symbol_id}",
+        params={},
+        headers=get_request_headers(),
+        verify=False,
+        timeout=20,
+    )
+    response.raise_for_status()
+    response = response.json()["bestLimits"]
+    response = sorted(response, key=lambda x: x["number"])
+
+    order_map = {"buy_rows": [], "sell_rows": []}
+    for row in response:
+        buy_row = {
+            "count": row["zOrdMeDem"],
+            "price": row["pMeDem"],
+            "volume": row["qTitMeDem"],
+        }
+        sell_row = {
+            "count": row["zOrdMeOf"],
+            "price": row["pMeOf"],
+            "volume": row["qTitMeOf"],
+        }
+
+        index = row["number"] - 1
+
+        while len(order_map["buy_rows"]) < index + 1:
+            order_map["buy_rows"].append(None)
+
+        while len(order_map["sell_rows"]) < index + 1:
+            order_map["sell_rows"].append(None)
+
+        order_map["buy_rows"][index] = buy_row
+        order_map["sell_rows"][index] = sell_row
+
+    return order_map
 
 
 def get_symbol_supervisor_messages(symbol_id: str) -> list[dict]:

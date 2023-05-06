@@ -159,6 +159,45 @@ def get_symbol_price_overview(symbol_id: str) -> dict:
     }
 
 
+def get_symbol_info(symbol_id: str) -> dict:
+    response = requests.get(
+        url=f"http://cdn.tsetmc.com/api/Instrument/GetInstrumentInfo/{symbol_id}",
+        params={},
+        headers=get_request_headers(),
+        verify=False,
+        timeout=20,
+    )
+    response.raise_for_status()
+    response = response.json()
+
+    date = convert_deven_to_jdate(response["instrumentInfo"]["dEven"])
+
+    return {
+        "date": date,
+        "symbol_id": response["instrumentInfo"]["insCode"],
+        "isin": response["instrumentInfo"]["instrumentID"],
+        "short_name": response["instrumentInfo"]["lVal18AFC"],
+        "full_name": response["instrumentInfo"]["lVal30"],
+        "eps": response["instrumentInfo"]["eps"]["estimatedEPS"],
+        "group_pe": response["instrumentInfo"]["eps"]["sectorPE"],
+        "group_code": response["instrumentInfo"]["sector"]["cSecVal"],
+        "group_name": response["instrumentInfo"]["sector"]["lSecVal"],
+        "range_min": response["instrumentInfo"]["staticThreshold"]["psGelStaMin"],
+        "range_max": response["instrumentInfo"]["staticThreshold"]["psGelStaMax"],
+        "min_week": response["instrumentInfo"]["minWeek"],
+        "max_week": response["instrumentInfo"]["maxWeek"],
+        "min_year": response["instrumentInfo"]["minYear"],
+        "max_year": response["instrumentInfo"]["maxYear"],
+        "month_volume_avg": response["instrumentInfo"]["qTotTran5JAvg"],
+        "contract_size": response["instrumentInfo"]["contractSize"],
+        "nav": response["instrumentInfo"]["nav"],
+        "flow": response["instrumentInfo"]["flow"],
+        "flow_title": response["instrumentInfo"]["flowTitle"],
+        "total_count": response["instrumentInfo"]["zTitad"],
+        "base_volume": response["instrumentInfo"]["baseVol"],
+    }
+
+
 def get_symbol_supervisor_messages(symbol_id: str) -> list[dict]:
     response = requests.get(
         url=" http://tsetmc.ir/Loader.aspx",

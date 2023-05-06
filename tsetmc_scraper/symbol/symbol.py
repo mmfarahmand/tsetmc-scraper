@@ -1,6 +1,7 @@
 from . import _core
 from .group import SymbolGroupDataRow
 from .identification import SymbolIdDetails
+from .info import SymbolInfo
 from .notification import SymbolNotificationsDataRow
 from .orderbook import SymbolOrderBookData, SymbolOrderBookDataRow
 from .price import SymbolDailyPriceDataRow, SymbolIntraDayPriceChartDataRow, SymbolPriceData, SymbolPriceOverview
@@ -98,6 +99,38 @@ class Symbol:
             orderbook=orderbook,
             traders_type=traders_type,
             group_data=group_data,
+        )
+
+    def get_info(self) -> SymbolInfo:
+        """
+        gets the symbol information such as EPS, Groupe PE, Flow, Flow Title, Base Volume and so on
+        """
+
+        raw_data = _core.get_symbol_info(symbol_id=self.symbol_id)
+
+        return SymbolInfo(
+            date=raw_data["date"],
+            symbol_id=raw_data["symbol_id"],
+            isin=raw_data["isin"],
+            short_name=raw_data["short_name"],
+            full_name=raw_data["full_name"],
+            eps=raw_data["eps"],
+            group_pe=raw_data["group_pe"],
+            group_code=raw_data["group_code"],
+            group_name=raw_data["group_name"],
+            range_min=raw_data["range_min"],
+            range_max=raw_data["range_max"],
+            min_week=raw_data["min_week"],
+            max_week=raw_data["max_week"],
+            min_year=raw_data["min_year"],
+            max_year=raw_data["max_year"],
+            month_volume_avg=raw_data["month_volume_avg"],
+            contract_size=raw_data["contract_size"],
+            nav=raw_data["nav"],
+            flow=raw_data["flow"],
+            flow_title=raw_data["flow_title"],
+            total_count=raw_data["total_count"],
+            base_volume=raw_data["base_volume"],
         )
 
     def get_intraday_price_chart_data(self) -> list[SymbolIntraDayPriceChartDataRow]:

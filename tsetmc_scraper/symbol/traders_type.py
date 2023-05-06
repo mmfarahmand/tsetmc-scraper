@@ -7,9 +7,14 @@ class SymbolTradersTypeSubInfo(BaseModel):
     value: int
 
 
+class SymbolTradersTypeAPISubInfo(BaseModel):
+    count: int
+    volume: int
+
+
 class SymbolTradersTypeInfo(BaseModel):
-    buy: SymbolTradersTypeSubInfo
-    sell: SymbolTradersTypeSubInfo
+    buy: SymbolTradersTypeSubInfo | SymbolTradersTypeAPISubInfo
+    sell: SymbolTradersTypeSubInfo | SymbolTradersTypeAPISubInfo
 
 
 class SymbolTradersTypeDataRow(BaseModel):

@@ -198,6 +198,41 @@ def get_symbol_info(symbol_id: str) -> dict:
     }
 
 
+def get_symbol_traders_type(symbol_id: str) -> dict:
+    response = requests.get(
+        url=f"http://cdn.tsetmc.com/api/ClientType/GetClientType/{symbol_id}/1/0",
+        params={},
+        headers=get_request_headers(),
+        verify=False,
+        timeout=20,
+    )
+    response.raise_for_status()
+    response = response.json()["clientType"]
+
+    return {
+        "legal": {
+            "buy": {
+                "volume": response["buy_N_Volume"],
+                "count": response["buy_CountN"],
+            },
+            "sell": {
+                "volume": response["sell_N_Volume"],
+                "count": response["sell_CountN"],
+            },
+        },
+        "real": {
+            "buy": {
+                "volume": response["buy_I_Volume"],
+                "count": response["buy_CountI"],
+            },
+            "sell": {
+                "volume": response["sell_I_Volume"],
+                "count": response["sell_CountI"],
+            },
+        },
+    }
+
+
 def get_symbol_supervisor_messages(symbol_id: str) -> list[dict]:
     response = requests.get(
         url=" http://tsetmc.ir/Loader.aspx",

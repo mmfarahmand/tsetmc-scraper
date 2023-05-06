@@ -8,7 +8,7 @@ from .price import SymbolDailyPriceDataRow, SymbolIntraDayPriceChartDataRow, Sym
 from .shareholder import SymbolShareHolder, SymbolShareHolderDataRow
 from .state_change import SymbolStateChangeDataRow
 from .supervisor_message import SymbolSupervisorMessageDataRow
-from .traders_type import SymbolTradersTypeDataRow, SymbolTradersTypeInfo, SymbolTradersTypeSubInfo
+from .traders_type import SymbolTradersTypeAPISubInfo, SymbolTradersTypeDataRow, SymbolTradersTypeInfo, SymbolTradersTypeSubInfo
 
 
 class Symbol:
@@ -131,6 +131,36 @@ class Symbol:
             flow_title=raw_data["flow_title"],
             total_count=raw_data["total_count"],
             base_volume=raw_data["base_volume"],
+        )
+
+    def get_traders_type(self) -> SymbolTradersTypeDataRow:
+        """
+        gets the symbol traders type
+        """
+
+        raw_data = _core.get_symbol_traders_type(symbol_id=self.symbol_id)
+
+        return SymbolTradersTypeDataRow(
+            legal=SymbolTradersTypeInfo(
+                buy=SymbolTradersTypeAPISubInfo(
+                    count=raw_data["legal"]["buy"]["count"],
+                    volume=raw_data["legal"]["buy"]["volume"],
+                ),
+                sell=SymbolTradersTypeAPISubInfo(
+                    count=raw_data["legal"]["sell"]["count"],
+                    volume=raw_data["legal"]["sell"]["volume"],
+                ),
+            ),
+            real=SymbolTradersTypeInfo(
+                buy=SymbolTradersTypeAPISubInfo(
+                    count=raw_data["real"]["buy"]["count"],
+                    volume=raw_data["real"]["buy"]["volume"],
+                ),
+                sell=SymbolTradersTypeAPISubInfo(
+                    count=raw_data["real"]["sell"]["count"],
+                    volume=raw_data["real"]["sell"]["volume"],
+                ),
+            ),
         )
 
     def get_intraday_price_chart_data(self) -> list[SymbolIntraDayPriceChartDataRow]:

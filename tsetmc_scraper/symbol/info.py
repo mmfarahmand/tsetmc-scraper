@@ -1,4 +1,4 @@
-from jdatetime import date as jdate
+from jdatetime import date as jdate, time as jtime
 from pydantic import BaseModel
 
 
@@ -25,6 +25,26 @@ class SymbolInfo(BaseModel):
     flow_title: str
     total_count: int
     base_volume: int
+
+    class Config:
+        arbitrary_types_allowed = True
+
+
+class SymbolClosingPriceInfo(BaseModel):
+    date: jdate
+    time: jtime
+    state_value: str
+    state_title: str
+    price_change: int
+    low: int
+    high: int
+    yesterday: int
+    open: int
+    close: int
+    last: int
+    count: int
+    volume: int
+    value: int
 
     class Config:
         arbitrary_types_allowed = True

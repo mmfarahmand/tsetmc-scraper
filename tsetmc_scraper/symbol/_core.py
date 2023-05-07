@@ -8,7 +8,7 @@ from jdatetime import date as jdate
 from jdatetime import datetime as jdatetime
 from jdatetime import time as jtime
 
-from ..utils import convert_deven_to_jdate, get_request_headers
+from ..utils import convert_deven_to_jdate, convert_heven_to_jtime, get_request_headers
 
 
 def get_symbol_intraday_price_chart(symbol_id: str) -> list[dict]:
@@ -169,33 +169,33 @@ def get_symbol_info(symbol_id: str) -> dict:
         timeout=20,
     )
     response.raise_for_status()
-    response = response.json()
+    response = response.json()["instrumentInfo"]
 
-    date = convert_deven_to_jdate(response["instrumentInfo"]["dEven"])
+    date = convert_deven_to_jdate(response["dEven"])
 
     return {
         "date": date,
-        "symbol_id": response["instrumentInfo"]["insCode"],
-        "isin": response["instrumentInfo"]["instrumentID"],
-        "short_name": response["instrumentInfo"]["lVal18AFC"],
-        "full_name": response["instrumentInfo"]["lVal30"],
-        "eps": response["instrumentInfo"]["eps"]["estimatedEPS"],
-        "group_pe": response["instrumentInfo"]["eps"]["sectorPE"],
-        "group_code": response["instrumentInfo"]["sector"]["cSecVal"],
-        "group_name": response["instrumentInfo"]["sector"]["lSecVal"],
-        "range_min": response["instrumentInfo"]["staticThreshold"]["psGelStaMin"],
-        "range_max": response["instrumentInfo"]["staticThreshold"]["psGelStaMax"],
-        "min_week": response["instrumentInfo"]["minWeek"],
-        "max_week": response["instrumentInfo"]["maxWeek"],
-        "min_year": response["instrumentInfo"]["minYear"],
-        "max_year": response["instrumentInfo"]["maxYear"],
-        "month_volume_avg": response["instrumentInfo"]["qTotTran5JAvg"],
-        "contract_size": response["instrumentInfo"]["contractSize"],
-        "nav": response["instrumentInfo"]["nav"],
-        "flow": response["instrumentInfo"]["flow"],
-        "flow_title": response["instrumentInfo"]["flowTitle"],
-        "total_count": response["instrumentInfo"]["zTitad"],
-        "base_volume": response["instrumentInfo"]["baseVol"],
+        "symbol_id": response["insCode"],
+        "isin": response["instrumentID"],
+        "short_name": response["lVal18AFC"],
+        "full_name": response["lVal30"],
+        "eps": response["eps"]["estimatedEPS"],
+        "group_pe": response["eps"]["sectorPE"],
+        "group_code": response["sector"]["cSecVal"],
+        "group_name": response["sector"]["lSecVal"],
+        "range_min": response["staticThreshold"]["psGelStaMin"],
+        "range_max": response["staticThreshold"]["psGelStaMax"],
+        "min_week": response["minWeek"],
+        "max_week": response["maxWeek"],
+        "min_year": response["minYear"],
+        "max_year": response["maxYear"],
+        "month_volume_avg": response["qTotTran5JAvg"],
+        "contract_size": response["contractSize"],
+        "nav": response["nav"],
+        "flow": response["flow"],
+        "flow_title": response["flowTitle"],
+        "total_count": response["zTitad"],
+        "base_volume": response["baseVol"],
     }
 
 
@@ -271,6 +271,35 @@ def get_symbol_orderbook(symbol_id: str) -> list[dict]:
         order_map["sell_rows"][index] = sell_row
 
     return order_map
+
+
+def get_symbol_closing_price_info(symbol_id: str) -> list[dict]:
+    response = requests.get(
+        url=f"http://cdn.tsetmc.com/api/ClosingPrice/GetClosingPriceInfo/{symbol_id}",
+        params={},
+        headers=get_request_headers(),
+        verify=False,
+        timeout=20,
+    )
+    response.raise_for_status()
+    response = response.json()["closingPriceInfo"]
+
+    return {
+        "date": convert_deven_to_jdate(deven=response["finalLastDate"]),
+        "time": convert_heven_to_jtime(heven=response["lastHEven"]),
+        "state_value": response["instrumentState"]["cEtaval"],
+        "state_title": response["instrumentState"]["cEtavalTitle"],
+        "price_change": response["priceChange"],
+        "low": response["priceMin"],
+        "high": response["priceMax"],
+        "yesterday": response["priceYesterday"],
+        "open": response["priceFirst"],
+        "close": response["pClosing"],
+        "last": response["pDrCotVal"],
+        "count": response["zTotTran"],
+        "volume": response["qTotTran5J"],
+        "value": response["qTotCap"],
+    }
 
 
 def get_symbol_supervisor_messages(symbol_id: str) -> list[dict]:

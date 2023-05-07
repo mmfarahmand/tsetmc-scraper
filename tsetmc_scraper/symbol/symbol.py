@@ -1,7 +1,7 @@
 from . import _core
 from .group import SymbolGroupDataRow
 from .identification import SymbolIdDetails
-from .info import SymbolInfo
+from .info import SymbolClosingPriceInfo, SymbolInfo
 from .notification import SymbolNotificationsDataRow
 from .orderbook import SymbolOrderBookData, SymbolOrderBookDataRow
 from .price import SymbolDailyPriceDataRow, SymbolIntraDayPriceChartDataRow, SymbolPriceData, SymbolPriceOverview
@@ -189,6 +189,30 @@ class Symbol:
         return SymbolOrderBookData(
             sell_rows=sell_rows,
             buy_rows=buy_rows,
+        )
+
+    def get_closing_price_info(self) -> SymbolClosingPriceInfo:
+        """
+        gets the symbol current closing price info
+        """
+
+        raw_data = _core.get_symbol_closing_price_info(symbol_id=self.symbol_id)
+
+        return SymbolClosingPriceInfo(
+            date=raw_data["date"],
+            time=raw_data["time"],
+            state_value=raw_data["state_value"].strip(),
+            state_title=raw_data["state_title"].strip(),
+            price_change=raw_data["price_change"],
+            low=raw_data["low"],
+            high=raw_data["high"],
+            yesterday=raw_data["yesterday"],
+            open=raw_data["open"],
+            close=raw_data["close"],
+            last=raw_data["last"],
+            count=raw_data["count"],
+            volume=raw_data["volume"],
+            value=raw_data["value"],
         )
 
     def get_intraday_price_chart_data(self) -> list[SymbolIntraDayPriceChartDataRow]:

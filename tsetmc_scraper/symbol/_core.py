@@ -42,6 +42,33 @@ def get_symbol_group_data(symbol_group_code: int) -> list[dict]:
     ]
 
 
+def get_symbol_option_data(symbol_isin: str) -> dict:
+    response = requests.get(
+        url=f"http://cdn.tsetmc.com/api/Instrument/GetInstrumentOptionByInstrumentID/{symbol_isin}",
+        params={},
+        headers=get_request_headers(),
+        verify=False,
+        timeout=20,
+    )
+    response.raise_for_status()
+    response = response.json()["instrumentOption"]
+
+    return {
+        "symbol_id": response["insCode"],
+        "isin": response["instrumentID"],
+        "base_symbol_id": response["uaInsCode"],
+        "buy_op": response["buyOP"],
+        "sell_op": response["sellOP"],
+        "contract_size": response["contractSize"],
+        "strike_price": response["strikePrice"],
+        "begin_date": convert_deven_to_jdate(response["beginDate"]),
+        "end_date": convert_deven_to_jdate(response["endDate"]),
+        "a_factor": response["aFactor"],
+        "b_factor": response["bFactor"],
+        "c_factor": response["cFactor"],
+    }
+
+
 def get_symbol_intraday_price_chart(symbol_id: str) -> list[dict]:
     response = requests.get(
         url="http://www.tsetmc.com/tsev2/chart/data/IntraDayPrice.aspx",

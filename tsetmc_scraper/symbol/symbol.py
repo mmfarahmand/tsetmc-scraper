@@ -3,6 +3,7 @@ from .group import SymbolGroupAPIDataRow, SymbolGroupDataRow
 from .identification import SymbolIdDetails
 from .info import SymbolClosingPriceInfo, SymbolInfo
 from .notification import SymbolNotificationsDataRow
+from .option import SymbolOptionData
 from .orderbook import SymbolOrderBookData, SymbolOrderBookDataRow
 from .price import SymbolDailyPriceDataRow, SymbolIntraDayPriceChartDataRow, SymbolPriceData, SymbolPriceOverview
 from .shareholder import SymbolShareHolder, SymbolShareHolderDataRow
@@ -219,7 +220,7 @@ class Symbol:
     def get_group_data(self, group_code: int | None = None) -> list[SymbolGroupAPIDataRow]:
         """
         gets related companies (companies in the same group)
-        in case of symbol_group_code being None, we'll call get_info to get the group_code for the current symbol
+        in case of group_code being None, we'll call get_info to get the group_code for the current symbol
         """
 
         if group_code is None:
@@ -245,6 +246,32 @@ class Symbol:
             )
             for row in raw_data
         ]
+
+    def get_option_data(self, isin: str | None = None) -> SymbolOptionData:
+        """
+        gets data for option symbols
+        in case of isin being None, we'll call get_info to get the isin for the current symbol
+        """
+
+        if isin is None:
+            isin = self.get_info().isin
+
+        raw_data = _core.get_symbol_option_data(symbol_isin=isin)
+
+        return SymbolOptionData(
+            symbol_id=raw_data["symbol_id"],
+            isin=raw_data["isin"],
+            base_symbol_id=raw_data["base_symbol_id"],
+            buy_op=raw_data["buy_op"],
+            sell_op=raw_data["sell_op"],
+            contract_size=raw_data["contract_size"],
+            strike_price=raw_data["strike_price"],
+            begin_date=raw_data["begin_date"],
+            end_date=raw_data["end_date"],
+            a_factor=raw_data["a_factor"],
+            b_factor=raw_data["b_factor"],
+            c_factor=raw_data["c_factor"],
+        )
 
     def get_intraday_trades(self) -> list[SymbolTradeRow]:
         """

@@ -8,3 +8,13 @@ class SymbolGroupDataRow(BaseModel):
     count: int
     volume: int
     value: int
+
+
+class SymbolGroupAPIDataRow(SymbolGroupDataRow):
+    short_name: str
+    long_name: str
+    change: int
+    high: int
+    low: int
+    open: int
+    yesterday: int

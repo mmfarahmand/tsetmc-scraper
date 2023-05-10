@@ -11,6 +11,37 @@ from jdatetime import time as jtime
 from ..utils import convert_deven_to_jdate, convert_heven_to_jtime, get_request_headers
 
 
+def get_symbol_group_data(symbol_group_code: int) -> list[dict]:
+    response = requests.get(
+        url=f"http://cdn.tsetmc.com/api/ClosingPrice/GetRelatedCompany/{symbol_group_code}",
+        params={},
+        headers=get_request_headers(),
+        verify=False,
+        timeout=20,
+    )
+    response.raise_for_status()
+    response = response.json()["relatedCompany"]
+
+    return [
+        {
+            "symbol_id": row["insCode"],
+            "short_name": row["instrument"]["lVal18AFC"],
+            "long_name": row["instrument"]["lVal30"],
+            "last": row["pDrCotVal"],
+            "close": row["pClosing"],
+            "count": row["zTotTran"],
+            "volume": row["qTotTran5J"],
+            "value": row["qTotCap"],
+            "change": row["priceChange"],
+            "high": row["priceMax"],
+            "low": row["priceMin"],
+            "open": row["priceFirst"],
+            "yesterday": row["priceYesterday"],
+        }
+        for row in response
+    ]
+
+
 def get_symbol_intraday_price_chart(symbol_id: str) -> list[dict]:
     response = requests.get(
         url="http://www.tsetmc.com/tsev2/chart/data/IntraDayPrice.aspx",
@@ -171,7 +202,7 @@ def get_symbol_info(symbol_id: str) -> dict:
     response.raise_for_status()
     response = response.json()["instrumentInfo"]
 
-    date = convert_deven_to_jdate(response["dEven"])
+    date = convert_deven_to_jdate(response["dEven"]) if response["dEven"] != 0 else None
 
     return {
         "date": date,

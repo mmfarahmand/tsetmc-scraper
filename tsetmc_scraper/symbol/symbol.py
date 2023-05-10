@@ -1,5 +1,5 @@
 from . import _core
-from .group import SymbolGroupDataRow
+from .group import SymbolGroupAPIDataRow, SymbolGroupDataRow
 from .identification import SymbolIdDetails
 from .info import SymbolClosingPriceInfo, SymbolInfo
 from .notification import SymbolNotificationsDataRow
@@ -215,6 +215,36 @@ class Symbol:
             volume=raw_data["volume"],
             value=raw_data["value"],
         )
+
+    def get_group_data(self, group_code: int | None = None) -> list[SymbolGroupAPIDataRow]:
+        """
+        gets related companies (companies in the same group)
+        in case of symbol_group_code being None, we'll call get_info to get the group_code for the current symbol
+        """
+
+        if group_code is None:
+            group_code = self.get_info().group_code
+
+        raw_data = _core.get_symbol_group_data(symbol_group_code=group_code)
+
+        return [
+            SymbolGroupAPIDataRow(
+                symbol_id=row["symbol_id"],
+                short_name=row["short_name"],
+                long_name=row["long_name"],
+                last=row["last"],
+                close=row["close"],
+                count=row["count"],
+                volume=row["volume"],
+                value=row["value"],
+                change=row["change"],
+                high=row["high"],
+                low=row["low"],
+                open=row["open"],
+                yesterday=row["yesterday"],
+            )
+            for row in raw_data
+        ]
 
     def get_intraday_trades(self) -> list[SymbolTradeRow]:
         """

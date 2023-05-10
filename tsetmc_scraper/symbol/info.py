@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 
 class SymbolInfo(BaseModel):
-    date: jdate
+    date: jdate | None
     symbol_id: str
     isin: str
     short_name: str

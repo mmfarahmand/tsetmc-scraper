@@ -8,6 +8,7 @@ from .price import SymbolDailyPriceDataRow, SymbolIntraDayPriceChartDataRow, Sym
 from .shareholder import SymbolShareHolder, SymbolShareHolderDataRow
 from .state_change import SymbolStateChangeDataRow
 from .supervisor_message import SymbolSupervisorMessageDataRow
+from .trade import SymbolTradeRow
 from .traders_type import SymbolTradersTypeAPISubInfo, SymbolTradersTypeDataRow, SymbolTradersTypeInfo, SymbolTradersTypeSubInfo
 
 
@@ -214,6 +215,23 @@ class Symbol:
             volume=raw_data["volume"],
             value=raw_data["value"],
         )
+
+    def get_intraday_trades(self) -> list[SymbolTradeRow]:
+        """
+        gets last days intraday trade list
+        """
+
+        raw_data = _core.get_symbol_intraday_trades(symbol_id=self.symbol_id)
+
+        return [
+            SymbolTradeRow(
+                time=row["time"],
+                volume=row["volume"],
+                price=row["price"],
+                canceled=row["canceled"],
+            )
+            for row in raw_data
+        ]
 
     def get_intraday_price_chart_data(self) -> list[SymbolIntraDayPriceChartDataRow]:
         """

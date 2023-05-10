@@ -273,7 +273,7 @@ def get_symbol_orderbook(symbol_id: str) -> list[dict]:
     return order_map
 
 
-def get_symbol_closing_price_info(symbol_id: str) -> list[dict]:
+def get_symbol_closing_price_info(symbol_id: str) -> dict:
     response = requests.get(
         url=f"http://cdn.tsetmc.com/api/ClosingPrice/GetClosingPriceInfo/{symbol_id}",
         params={},
@@ -300,6 +300,35 @@ def get_symbol_closing_price_info(symbol_id: str) -> list[dict]:
         "volume": response["qTotTran5J"],
         "value": response["qTotCap"],
     }
+
+
+def get_symbol_intraday_trades(symbol_id: str) -> list[dict]:
+    response = requests.get(
+        url=f"http://cdn.tsetmc.com/api/Trade/GetTrade/{symbol_id}",
+        params={},
+        headers=get_request_headers(),
+        verify=False,
+        timeout=20,
+    )
+    response.raise_for_status()
+    response = response.json()["trade"]
+
+    trade_list = []
+
+    for row in response:
+        index = row["nTran"] - 1
+
+        while len(trade_list) - 1 < index:
+            trade_list.append(None)
+
+        trade_list[index] = {
+            "time": convert_heven_to_jtime(row["hEven"]),
+            "volume": row["qTitTran"],
+            "price": row["pTran"],
+            "canceled": row["canceled"],
+        }
+
+    return trade_list
 
 
 def get_symbol_supervisor_messages(symbol_id: str) -> list[dict]:

@@ -21,6 +21,8 @@ class SymbolPriceData(BaseModel):
 
 class SymbolDailyPriceDataRow(SymbolPriceData):
     date: jdate
+    time: jtime
+    change: int
 
     class Config:
         arbitrary_types_allowed = True

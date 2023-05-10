@@ -340,46 +340,32 @@ def get_symbol_supervisor_messages(symbol_id: str) -> list[dict]:
 
 def get_symbol_daily_ticks_history(symbol_id: str) -> list[dict]:
     response = requests.get(
-        url="http://www.tsetmc.com/tsev2/data/InstTradeHistory.aspx",
-        params={
-            "i": symbol_id,
-            "Top": 999999,
-            "A": 0,
-        },
+        url=f"http://cdn.tsetmc.com/api/ClosingPrice/GetClosingPriceDailyList/{symbol_id}/0",
+        params={},
         headers=get_request_headers(),
         verify=False,
         timeout=20,
     )
     response.raise_for_status()
-    response = response.text
+    response = response.json()["closingPriceDaily"]
 
-    data = response.split(";")
-    ticks = []
-    for row in data:
-        if not row:
-            continue
-
-        dt, high, low, close, last, opn, yesterday, value, volume, count = row.split("@")
-        ticks.append(
-            {
-                "date": jdate.fromgregorian(
-                    year=int(dt[:4]),
-                    month=int(dt[4:6]),
-                    day=int(dt[6:]),
-                ),
-                "high": int(float(high)),
-                "low": int(float(low)),
-                "close": int(float(close)),
-                "last": int(float(last)),
-                "open": int(float(opn)),
-                "yesterday": int(float(yesterday)),
-                "value": int(float(value)),
-                "volume": int(float(volume)),
-                "count": int(float(count)),
-            }
-        )
-
-    return ticks
+    return [
+        {
+            "date": convert_deven_to_jdate(row["dEven"]),
+            "time": convert_heven_to_jtime(row["hEven"]),
+            "open": row["priceFirst"],
+            "high": row["priceMax"],
+            "low": row["priceMin"],
+            "close": row["pClosing"],
+            "last": row["pDrCotVal"],
+            "yesterday": row["priceYesterday"],
+            "change": row["priceChange"],
+            "value": row["qTotCap"],
+            "volume": row["qTotTran5J"],
+            "count": row["zTotTran"],
+        }
+        for row in response
+    ]
 
 
 def get_symbol_notifications(symbol_id: str) -> list[dict]:

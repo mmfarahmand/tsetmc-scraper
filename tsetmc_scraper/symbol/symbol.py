@@ -295,13 +295,15 @@ class Symbol:
 
         raw_data = _core.get_symbol_daily_ticks_history(symbol_id=self.symbol_id)
 
-        ticks = [
+        return [
             SymbolDailyPriceDataRow(
                 date=row["date"],
+                time=row["time"],
                 last=row["last"],
                 close=row["close"],
                 open=row["open"],
                 yesterday=row["yesterday"],
+                change=row["change"],
                 high=row["high"],
                 low=row["low"],
                 count=row["count"],
@@ -310,8 +312,6 @@ class Symbol:
             )
             for row in raw_data
         ]
-
-        return ticks
 
     def get_id_details(self) -> SymbolIdDetails:
         """

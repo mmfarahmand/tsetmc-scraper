@@ -19,7 +19,7 @@ class Symbol:
 
     def get_price_overview(self) -> SymbolPriceOverview:
         """
-        gets the last price overview of the symbol and returns most of the information (in "dar yek negah" tab)
+        Returns an overview of the last price information for a given symbol, including most of the information available in the "dar yek negah" tab.
         """
 
         raw_data = _core.get_symbol_price_overview(symbol_id=self.symbol_id)
@@ -105,7 +105,7 @@ class Symbol:
 
     def get_info(self) -> SymbolInfo:
         """
-        gets the symbol information such as EPS, Groupe PE, Flow, Flow Title, Base Volume and so on
+        Returns symbol information such as EPS, Groupe PE, Flow, Flow Title, Base Volume, and other relevant data.
         """
 
         raw_data = _core.get_symbol_info(symbol_id=self.symbol_id)
@@ -137,7 +137,7 @@ class Symbol:
 
     def get_traders_type(self) -> SymbolTradersTypeDataRow:
         """
-        gets the symbol traders type
+        Returns the trader type information for a given symbol.
         """
 
         raw_data = _core.get_symbol_traders_type(symbol_id=self.symbol_id)
@@ -167,7 +167,7 @@ class Symbol:
 
     def get_orderbook(self) -> SymbolOrderBookData:
         """
-        gets the symbol orderbook
+        Returns the orderbook for a given symbol.
         """
 
         raw_data = _core.get_symbol_orderbook(symbol_id=self.symbol_id)
@@ -195,7 +195,7 @@ class Symbol:
 
     def get_closing_price_info(self) -> SymbolClosingPriceInfo:
         """
-        gets the symbol current closing price info
+        Returns the current closing price information for a given symbol.
         """
 
         raw_data = _core.get_symbol_closing_price_info(symbol_id=self.symbol_id)
@@ -219,8 +219,7 @@ class Symbol:
 
     def get_group_data(self, group_code: int | None = None) -> list[SymbolGroupAPIDataRow]:
         """
-        gets related companies (companies in the same group)
-        in case of group_code being None, we'll call get_info to get the group_code for the current symbol
+        Returns a list of related companies (companies in the same group) for a given symbol. If group_code is not provided, this function will call get_info to retrieve the group code for the current symbol.
         """
 
         if group_code is None:
@@ -249,8 +248,7 @@ class Symbol:
 
     def get_option_data(self, isin: str | None = None) -> SymbolOptionData:
         """
-        gets data for option symbols
-        in case of isin being None, we'll call get_info to get the isin for the current symbol
+        Returns data for option symbols. If isin is not provided, this function will call get_info to retrieve the ISIN for the current symbol.
         """
 
         if isin is None:
@@ -273,12 +271,12 @@ class Symbol:
             c_factor=raw_data["c_factor"],
         )
 
-    def get_intraday_trades(self) -> list[SymbolTradeRow]:
+    def get_trades_data(self) -> list[SymbolTradeRow]:
         """
-        gets last days intraday trade list
+        Returns the trade list from the last day.
         """
 
-        raw_data = _core.get_symbol_intraday_trades(symbol_id=self.symbol_id)
+        raw_data = _core.get_symbol_trades_data(symbol_id=self.symbol_id)
 
         return [
             SymbolTradeRow(
@@ -292,7 +290,7 @@ class Symbol:
 
     def get_intraday_price_chart_data(self) -> list[SymbolIntraDayPriceChartDataRow]:
         """
-        gets last days intraday price chart (in "dar yek negah" tab)
+        Returns the intraday price chart from the last day, as displayed in the "dar yek negah" tab.
         """
 
         raw_data = _core.get_symbol_intraday_price_chart(symbol_id=self.symbol_id)
@@ -313,7 +311,7 @@ class Symbol:
 
     def get_supervisor_messages_data(self) -> list[SymbolSupervisorMessageDataRow]:
         """
-        get list of supervisor messages (in "payame nazer" tab)
+        Returns a list of supervisor messages, as displayed in the "payame nazer" tab.
         """
 
         raw_data = _core.get_symbol_supervisor_messages(symbol_id=self.symbol_id)
@@ -331,7 +329,7 @@ class Symbol:
 
     def get_notifications_data(self) -> list[SymbolNotificationsDataRow]:
         """
-        get list of notifications (in "etelaiye ha" tab)
+        Returns a list of notifications, as displayed in the "etelaiye ha" tab.
         """
 
         raw_data = _core.get_symbol_notifications(symbol_id=self.symbol_id)
@@ -348,7 +346,7 @@ class Symbol:
 
     def get_state_changes_data(self) -> list[SymbolStateChangeDataRow]:
         """
-        get list of state changes (in "taghire vaziat" tab)
+        Returns a list of state changes, as displayed in the "taghire vaziat" tab.
         """
 
         raw_data = _core.get_symbol_state_changes(symbol_id=self.symbol_id)
@@ -365,7 +363,7 @@ class Symbol:
 
     def get_daily_history(self) -> list[SymbolDailyPriceDataRow]:
         """
-        get list of daily ticks history (in "sabeghe" tab)
+        Returns a list of daily ticks history, as displayed in the "sabeghe" tab.
         """
 
         raw_data = _core.get_symbol_daily_ticks_history(symbol_id=self.symbol_id)
@@ -390,7 +388,7 @@ class Symbol:
 
     def get_id_details(self) -> SymbolIdDetails:
         """
-        gets symbol identity details and returns all the information (in "shenase" tab)
+        Returns all available information related to the symbol identity, as displayed in the "shenase" tab.
         """
 
         raw_data = _core.get_symbol_id_details(symbol_id=self.symbol_id)
@@ -416,7 +414,7 @@ class Symbol:
 
     def get_traders_type_history(self) -> list[SymbolTradersTypeDataRow]:
         """
-        returns daily traders type history (in "haghihi-hoghooghi" tab)
+        Returns the daily trader type history, as displayed in the "haghihi-hoghooghi" tab.
         """
 
         raw_data = _core.get_symbol_traders_type_history(symbol_id=self.symbol_id)
@@ -455,7 +453,7 @@ class Symbol:
 
     def get_shareholders_data(self) -> list[SymbolShareHolderDataRow]:
         """
-        returns list of major shareholders (in "saham daran" tab)
+        Returns a list of major shareholders, as displayed in the "saham daran" tab.
         """
 
         company_isin = self.get_id_details().company_isin

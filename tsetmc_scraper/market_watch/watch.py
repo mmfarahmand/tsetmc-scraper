@@ -14,7 +14,7 @@ class MarketWatch:
 
     def get_price_data(self) -> dict[str, WatchPriceDataRow]:
         """
-        gets basic price information (in "didbane bazar" page)
+        Returns basic price information from the "didbane bazar" page.
         """
 
         (
@@ -83,7 +83,7 @@ class MarketWatch:
 
     def get_traders_type_data(self) -> dict[str, WatchTradersTypeDataRow]:
         """
-        gets traders type data (in "didebane bazar" page)
+        Returns trader type data from the "didebane bazar" page.
         """
 
         raw_data = _core.get_watch_traders_type_data()
@@ -117,7 +117,7 @@ class MarketWatch:
 
     def get_daily_history_data(self) -> dict[str, list[WatchDailyHistoryDataRow]]:
         """
-        gets 30 day history of symbols (in "didbane bazar" page)
+        Returns the 60-day history of symbols from the "didbane bazar" page.
         """
 
         raw_data = _core.get_watch_daily_history_data()
@@ -144,12 +144,12 @@ class MarketWatch:
 
     def get_raw_stats_data(self) -> dict[list]:
         """
-        returns a list of stats for each symbol. refer to tsetmc.com for information of what each item in the list is
+        Returns a list of statistics for each symbol. Please refer to tsetmc.com for information on what each item in the list represents.
         """
 
     def get_stats_data(self) -> dict[dict]:
         """
-        !!! EXPERIMENTAL: returns stats in dict, may be wrong !!!
+        !!! EXPERIMENTAL: This function returns dictionary-formatted statistics, which may be incorrect and should be used with caution !!!
         """
 
         return _core.get_watch_stats_data()

@@ -360,7 +360,7 @@ def get_symbol_closing_price_info(symbol_id: str) -> dict:
     }
 
 
-def get_symbol_intraday_trades(symbol_id: str) -> list[dict]:
+def get_symbol_trades_data(symbol_id: str) -> list[dict]:
     response = requests.get(
         url=f"http://cdn.tsetmc.com/api/Trade/GetTrade/{symbol_id}",
         params={},

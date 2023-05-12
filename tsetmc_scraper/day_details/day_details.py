@@ -16,7 +16,7 @@ class DayDetails:
 
     def get_price_overview(self) -> DayDetailsPriceOverview:
         """
-        returns an overview of price information for that day
+        Returns an overview of price information for a given day.
         """
 
         raw_data = _core.get_day_details_price_overview(symbol_id=self.symbol_id, date=self.date)
@@ -36,7 +36,7 @@ class DayDetails:
 
     def get_price_data(self) -> list[DayDetailsPriceDataRow]:
         """
-        returns instant prices (for each time in that date)
+        Returns the instant prices for each time on a given date.
         """
 
         raw_data = _core.get_day_details_price_data(symbol_id=self.symbol_id, date=self.date)
@@ -55,7 +55,7 @@ class DayDetails:
 
     def get_orderbook_data(self) -> list[DayDetailsOrderBookDataRow]:
         """
-        returns instant orderbooks (for each time in that date)
+        Returns the instant orderbooks for each time on a given date.
         """
 
         raw_data = _core.get_day_details_orderbook_data(symbol_id=self.symbol_id, date=self.date)
@@ -87,7 +87,7 @@ class DayDetails:
 
     def get_traders_type_data(self) -> DayDetailsTradersTypeData:
         """
-        returns traders type information for that day
+        Returns information about trader types for a given day.
         """
 
         raw_data = _core.get_day_details_traders_type_data(symbol_id=self.symbol_id, date=self.date)
@@ -121,7 +121,7 @@ class DayDetails:
 
     def get_trades_data(self, summarize: bool = False) -> list[DayDetailsTradeDataRow]:
         """
-        gets all trade data
+        Returns all available trade data.
         """
 
         raw_data = _core.get_day_details_trade_data(symbol_id=self.symbol_id, date=self.date, summarize=summarize)
@@ -144,7 +144,7 @@ class DayDetails:
 
     def get_shareholders_data(self) -> tuple[list[DayDetailsShareHolderDataRow], list[DayDetailsShareHolderDataRow]]:
         """
-        gets list of shareholders before and after the day
+        Returns a list of shareholders before and after a given day.
         """
 
         raw_old_shareholders, raw_new_shareholders = _core.get_day_details_shareholders_data(

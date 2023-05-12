@@ -37,8 +37,7 @@ class MarketMap:
 
     def get_market_map_data(self, map_type: MapType = MapType.MARKET_VALUE) -> dict[str, MapDataRow]:
         """
-        returns symbol data in market map (in "naghshe bazar" page)
-        !!! webserver occasionally throws 403 error, you should retry in a few seconds when this happens
+        Returns symbol data in the market map section ("naghshe bazar") page. Note that the webserver may occasionally throw a 403 error, in which case you should wait a few seconds and retry.
         """
 
         raw_data, new_heven = _core.get_market_map_data(map_type=map_type.value, heven=self._heven)

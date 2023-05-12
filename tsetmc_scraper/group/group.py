@@ -22,7 +22,7 @@ class Group(BaseModel):
     @staticmethod
     def get_all_groups() -> list[Group]:
         """
-        returns list of symbol groups
+        Returns a list of symbol groups.
         """
 
         raw_data = _core.get_group_static_data()

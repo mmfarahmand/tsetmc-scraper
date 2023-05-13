@@ -147,7 +147,9 @@ class MarketWatch:
         Returns a list of statistics for each symbol. Please refer to tsetmc.com for information on what each item in the list represents.
         """
 
-    def get_stats_data(self) -> dict[dict]:
+        return _core.get_watch_raw_stats_data()
+
+    def get_stats_data(self) -> dict[str, dict]:
         """
         !!! EXPERIMENTAL: This function returns dictionary-formatted statistics, which may be incorrect and should be used with caution !!!
         """

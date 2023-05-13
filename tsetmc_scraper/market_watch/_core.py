@@ -331,28 +331,29 @@ def get_watch_raw_stats_data() -> dict:
     response = response.text
 
     symbol_id = None
-    ret = defaultdict(dict)
+    raw_stats_data = defaultdict(dict)
     sections = response.split(";")
+
     for section in sections:
-        r = section.split(",")
-        if len(r) == 3:
-            symbol_id = r[0]
-            r = r[1:]
+        row = section.split(",")
+        if len(row) == 3:
+            symbol_id = row[0]
+            row = row[1:]
 
-        index = int(r[0])
-        val = int(r[1]) if "." not in r[1] else float(r[1])
+        index = int(row[0])
+        val = int(row[1]) if "." not in row[1] else float(row[1])
 
-        ret[symbol_id][index] = val
+        raw_stats_data[symbol_id][index] = val
 
-    return ret
+    return raw_stats_data
 
 
 def get_watch_stats_data() -> dict:
     raw_stats = get_watch_raw_stats_data()
 
-    ret = {}
+    stats_data = {}
     for symbol_id, stats in raw_stats.items():
-        ret[symbol_id] = {
+        stats_data[symbol_id] = {
             "trades": {},
             "negative_days": {},
             "no_trade_days": {},
@@ -394,6 +395,6 @@ def get_watch_stats_data() -> dict:
             else:
                 continue
 
-            ret[symbol_id][sub_name][indices_obj[index]] = val
+            stats_data[symbol_id][sub_name][indices_obj[index]] = val
 
-    return ret
+    return stats_data
